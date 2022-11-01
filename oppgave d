@@ -1,0 +1,33 @@
+class avtale:
+    def __init__(self, hva, hvor, varighet):
+        self.hva=hva
+        self.hvor=hvor
+        self.varighet=varighet
+       
+    def __str__(self):
+        return f"Type: {self.hva}\nSted: {self.hvor}\nVarighet: {self.varighet}"
+
+    def legg():
+        input_hva = str(input("hva skal foregå: "))
+        input_hvor = str(input("hvor skal det foregå?: "))
+        input_varighet = int(input ("varighet: "))
+        
+        if not str.isnumeric(input_hvor):
+            print("sted må være bokstaver")
+            return
+        
+        if input_varighet is not int:
+            print(" varighet må oppgis i tall")
+            input_varighet = int(input ("varighet: "))
+            return
+            
+        print(avtale(input_hva, input_hvor, input_varighet))
+
+        
+if __name__ == "__main__":
+    avtale.legg()
+
+
+# f) Lag en funksjon som lar brukeren skrive inn en ny avtale. Funksjonen skal bruke input-
+# funksjonen til å lese inn egenskapene til avtalen og skal sjekke at det brukeren skriver er 
+# gyldig, for eksempel at varighet er et tall. Funksjonen skal returnere et avtale-objekt 
