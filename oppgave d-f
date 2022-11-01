@@ -1,32 +1,39 @@
-class avtale:
-    def __init__(self, hva, hvor, varighet):
+# d) Lag en klasse for en avtale. En avtale skal minimum ha: 
+# a. En tittel som sier hva denne avtalen er (streng) 
+# b. Et sted (streng) 
+# c. Et starttidspunkt (datetime objekt, se hint nederst) 
+# d. En varighet i minutter (int) 
+
+class Avtale:
+    def __init__(self, hva, hvor, starttidspunkt, varighet):
         self.hva=hva
         self.hvor=hvor
+        self.starttidspunkt=starttidspunkt
         self.varighet=varighet
        
     def __str__(self):
-        return f"Type: {self.hva}\nSted: {self.hvor}\nVarighet: {self.varighet}"
+        return f"Type: {self.hva}\nSted: {self.hvor}\nStarttidspunkt: {self.starttidspunkt}\nVarighet: {self.varighet}"
 
-    def legg():
-        input_hva = str(input("hva skal foregå: "))
-        input_hvor = str(input("hvor skal det foregå?: "))
+
+
+def lag_avtale():
+    input_hva = str(input("hva skal foregå: "))
+    input_hvor = str(input("hvor skal det foregå?: "))
+    input_tidspunkt = str(input("velg time (format HH:MM): "))
+    try:
         input_varighet = int(input ("varighet: "))
-        
-        if not str.isnumeric(input_hvor):
-            print("sted må være bokstaver")
-            return
-        
-        if input_varighet is not int:
-            print(" varighet må oppgis i tall")
-            input_varighet = int(input ("varighet: "))
-            return
-            
-        print(avtale(input_hva, input_hvor, input_varighet))
+        return Avtale(input_hva, input_hvor, input_tidspunkt, input_varighet)
+    except ValueError:
+        print("Kunne ikke konvertere varighet til streng!!")
+        return 0
+    
+    
 
         
 if __name__ == "__main__":
-    avtale.legg()
-
+    a = lag_avtale()
+    print()
+    print(a)
 
 # f) Lag en funksjon som lar brukeren skrive inn en ny avtale. Funksjonen skal bruke input-
 # funksjonen til å lese inn egenskapene til avtalen og skal sjekke at det brukeren skriver er 
