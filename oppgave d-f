@@ -39,4 +39,6 @@ if __name__ == "__main__":
 # funksjonen til å lese inn egenskapene til avtalen og skal sjekke at det brukeren skriver er 
 # gyldig, for eksempel at varighet er et tall. Funksjonen skal returnere et avtale-objekt 
 
-Smi
+Kamalan
+
+
