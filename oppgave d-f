@@ -1,6 +1,4 @@
-
 from datetime import datetime
-from datetime import date
 import string
 
 class Avtale:
@@ -66,26 +64,34 @@ def leser_file(filnavn = "avtaler.txt"):
 
 
 #Oppgave j
-def leser_file(filnavn = "avtaler.txt"):
-    avtaler=[]
-    with open(filnavn, 'r'):
-        liste.index('')
-        for line in file:
-            info = line.split(",")
-            info.list[3]
-        Avtale.sort("starttidspunkt")
-        if starttidspunkt >= 1:
-            i = 0
-        while not there_is_reason_to_break(i):
-            i += 1
-    return date
-    print (date)
+def avtale_dato(avtale, dato):
+ 
+    dato_avtale = []
+ 
+    for avtale in avtale:
+ 
+        if dato == avtale.start_time.date():
+ 
+            dato_avtale.append(avtale)
+ 
+    return dato_avtale
 
 
 #Oppgave k
+def avtale_string(avtale, string):
+ 
+    string_avtale = []
+ 
+    for avtale in avtale:
+ 
+        if string in avtale.title:
+ 
+            string_avtale.append(avtale)
+ 
+    return string_avtale
 
 
-#Oppgave logm
+#Oppgave l og m
 
 def Meny():
     print("Velkommen til avtalemenyen!")
