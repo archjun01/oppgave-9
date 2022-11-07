@@ -1,0 +1,136 @@
+
+class Kategori:
+
+    # c
+    def __init__(self, id, navn, prioritet=1):
+        self.id = id
+        self.navn = navn
+        self.prioritet = prioritet
+
+    def __repr__(self) -> str:
+        return self.navn
+
+    def __str__(self) -> str:
+        msg = ""
+        # går gjennom alle attributter til klassen
+        # vars(self).items = {id: valgt-id, navn: valgt-navn, prioritet: valgt-prioritet}
+        for attributt, verdi in vars(self).items():
+            msg += f'{attributt}: {verdi}, '
+
+        return f'Id: {self.id}, Navn: {self.navn}, Prioritet: {self.prioritet}\n'
+
+    # d
+def lag_kategori():
+
+    kat_id = input("Kategori-id: ")
+    kat_navn = input("Kategori-navn: ")
+    kat_pri = input("Prioritet (1-3): ")
+
+    return Kategori(id=kat_id, navn=kat_navn, prioritet=kat_pri)
+
+# e, f
+def les_kategori_fra_fil(fil_sti: str) -> list:
+    """ 
+    Leser alle kategorier fra fil
+    og returnerer en liste med kategori-objekter
+    """
+
+    with open(file=fil_sti, mode='r') as fil:
+
+        # fjerner '\n', fjerner ',' også splitter resten på whitespace
+        # for hver kategori vil man ha en liste med attributt og verdier
+        kategorier = [line.strip().replace(',', '').split()
+                      for line in fil]
+        # print(kategorier)
+
+        kategori_liste = [Kategori(liste[1], liste[3], liste[5])
+                          for liste in kategorier]
+        print(kategori_liste)
+        return kategori_liste
+
+def lagre_kategorier_til_fil(fil_sti: str, kategori_liste: list):
+
+    with open(file=fil_sti, mode='w') as fil:
+        for kategori in kategori_liste:
+            fil.write(kategori.__str__())
+
+
+class Sted:
+    # g
+    def __init__(self, id, navn, gateadresse=None, postnummer=None, poststed=None):
+        self.id = id
+        self.navn = navn
+        self.gateadresse = gateadresse
+        self.postnr = postnummer
+        self.poststed = poststed
+
+    def __repr__(self) -> str:
+        return self.navn
+    
+    #sammenligne om to steder er like
+    def __eq__(self, other):
+        if not isinstance(other, Sted):
+            return False
+        if self.id == other.id:
+            return True
+
+    def __str__(self) -> str:
+
+        # one-line, return vars(self).__str__()
+        msg = ""
+        for attributt, verdi in vars(self).items():
+            if verdi is not None:
+                msg += f'{attributt}: {verdi}, '
+
+        return msg.rstrip().rstrip(',') + '\n'
+
+# h
+def lag_sted():
+
+    sted_id = input("sted-id: ")
+    sted_navn = input("sted-navn: ")
+    gate_adresse = input("gateadresse: ")
+    postnr = input("postnr: ")
+    post_sted = input("poststed: ")
+
+    return Sted(id=sted_id, navn=sted_navn, gateadresse=gate_adresse, postnummer=postnr, poststed=post_sted)
+
+# i
+def lagre_steder_til_fil(fil_sti: str, liste_av_steder: list):
+
+    with open(file=fil_sti, mode='w') as fil:
+        for sted in liste_av_steder:
+            fil.write(sted.__str__())
+# j
+
+def les_sted_fra_fil(fil_sti: str) -> list:
+
+    with open(file=fil_sti, mode='r') as fil:
+
+        steder = [line.strip().replace(',', '').split()
+                  for line in fil]
+        # print(steder)
+
+        liste_av_steder = [Sted(liste[1], liste[3], liste[5])
+                           for liste in steder]
+        print(liste_av_steder)
+        return liste_av_steder
+
+
+def test():
+    kat = Kategori(1, "TestKat")
+    print(kat)
+    kat2 = Kategori(2, "Nykat", 3)
+
+    fil_navn = "kategorier.txt"
+    lagre_kategorier_til_fil(fil_navn, [kat, kat2])
+    les_kategori_fra_fil(fil_navn)
+    sted = Sted(2, "Campus", "et sted i Stavanger", None, "Stavanger")
+    sted2 = Sted(4, "hjemme", "stort hus", None, "Stavanger")
+    sted_fil = 'steder.txt'
+    lagre_steder_til_fil(sted_fil, [sted, sted2])
+    les_sted_fra_fil(sted_fil)
+
+
+if __name__ == "__main__":
+    test()
