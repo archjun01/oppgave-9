@@ -1,25 +1,59 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Mon Nov  7 19:35:36 2022
+
+@author: archjun
+"""
+
+
 from datetime import datetime
 import string
+from del_2 import Kategori, Sted, lag_kategori, lag_sted
+
+KATEGORIER = {}
+STEDER = {}
+
 
 class Avtale:
-    def _init_ (self, tittel, sted, starttidspunkt, varighet):
+    def __init__(self, tittel, sted, starttidspunkt, varighet, kategorier=[]):
         self.tittel = tittel
         self.sted = sted
         self.starttidspunkt = starttidspunkt
         self.varighet = varighet
+        self.kategorier = kategorier
+    def __repr__(self):
+        return self.tittel
+
+# k, øving 10
+    def legg_til_kategori(self, kategori: Kategori):
+        self.kategorier.append(kategori)
+
+# Oppgave e
+# oppgave q, øving 10
+
+    def __str__(self):
+        return f"\nAvtale:\n Tittel: {self.tittel}\n Sted: {self.sted.navn}\n Klokken: {self.starttidspunkt}\n Varighet: {self.varighet} minutter Kategorier: {self.kategorier}\n"
 
 
-#Oppgave e
-    def _str_ (self):
-        return f"\nAvtale:\n Tittel: {self.tittel}\n Sted: {self.sted}\n Klokken: {self.starttidspunkt}\n Varighet: {self.varighet} minutter\n"
-
-
-#Oppgave f
+# Oppgave f øving 9, oppg n øving 10
 def ny_avtale():
     tittel = input("Skriv inn hva avtalen er: ")
-    sted = input("Skriv inn stedet avtalen er: ")
+    sted = None
+    if STEDER:
+        print("Tilgjengelige Steder:", STEDER)
+        sted = input("Skriv inn nr på stedet fra listen avtalen er (eller noe random om du vil lage et nytt sted): ")
     
-    starttidspunkt = input("Skriv inn starttidspunktet med formatet [ÅÅÅÅ-MM-DD TT:MM:SS]: ")
+    if sted not in STEDER:
+        sted_id = input("Skriv inn sted-id: ")
+        sted_navn = input("Skriv inn navn på sted: ")
+        sted = Sted(sted_id, sted_navn)
+        STEDER[sted_id] = sted
+    else:
+        sted = STEDER.get(sted)
+        
+    starttidspunkt = input(
+        "Skriv inn starttidspunktet med formatet [ÅÅÅÅ-MM-DD TT:MM:SS]: ")
     if starttidspunkt:
         starttidspunkt = datetime.fromisoformat(starttidspunkt)
     else:
@@ -31,29 +65,35 @@ def ny_avtale():
             break
         except ValueError:
             print("Varighet må være et tall!")
-    
+
     return Avtale(tittel, sted, starttidspunkt, varighet)
 
-#Oppgave g
+# Oppgave g
+
 
 def utskrift(avtaler):
     print("Overskrift")
     for i, avtale in enumerate(avtaler):
+        print(avtale)
         print(f"{i}. Avtale: {avtale.tittel}")
 
 
-#Oppgave h
+# Oppgave h
 
 def lagre_avtaler(avtaler: list):
     with open("avtaler.txt", "w") as fil:
         for avtale in avtaler:
+            fil.write("Kategori-liste \n")
+            Kategori.lagre_kategorier_til_fil(
+                avtale.kategorier[0], "avtaler.txt", avtale.kategorier)
+            fil.write("Avtale \n")
             linje = f"{avtale.tittel},{avtale.sted},{avtale.starttidspunkt},{avtale.varighet}\n"
             fil.write(linje)
 
 
-#Oppgave i
+# Oppgave i
 
-def leser_file(filnavn = "avtaler.txt"):
+def leser_file(filnavn="avtaler.txt"):
     avtaler = []
     with open(filnavn, "r") as fil:
         for linje in fil:
@@ -63,35 +103,66 @@ def leser_file(filnavn = "avtaler.txt"):
     return avtaler
 
 
-#Oppgave j
+# Oppgave j
 def avtale_dato(avtale, dato):
- 
+
     dato_avtale = []
- 
+
     for avtale in avtale:
- 
+
         if dato == avtale.start_time.date():
- 
+
             dato_avtale.append(avtale)
- 
+
     return dato_avtale
 
 
-#Oppgave k
+# Oppgave k
 def avtale_string(avtale, string):
- 
+
     string_avtale = []
- 
+
     for avtale in avtale:
- 
+
         if string in avtale.title:
- 
+
             string_avtale.append(avtale)
- 
+
     return string_avtale
 
+# m, øving 10
 
-#Oppgave l og m
+
+def legg_til_kategori():
+    kategori = lag_kategori()
+    KATEGORIER[kategori.id] = kategori
+    print(KATEGORIER)
+
+
+def legg_til_sted():
+    sted = lag_sted()
+    STEDER[sted.id] = sted
+    print(STEDER)
+    
+#oppg o øving 10
+    
+def legg_kategori_til_avtale():
+    if KATEGORIER:
+        print("Tilgjengelige Kategorier: ", KATEGORIER)
+        index = input("Velg indeks til kategori du vil legge til: ")
+        if index in KATEGORIER:
+            kategori = KATEGORIER.get(index)
+            return kategori 
+        else:
+            print("Fant ikke kategorien..")
+            return None
+    else:
+        print("lag en kategori først..")
+        return None
+    
+# Oppgave l og m
+
+
 
 def Meny():
     print("Velkommen til avtalemenyen!")
@@ -104,52 +175,86 @@ def Meny():
         print("4. Skriv ut alle avtalene")
         print("5. Slett avtale")
         print("6. Rediger avtale")
-        print("7. Avslutt")
-        
+        print("7. Legg til Kategori")
+        print("8. Legg til Sted")
+        print("9. Legg en kategori til avtale")
+        #oppg p øving 10
+        print("10. Finn avtaler for et sted")
+        print("11. Avslutt")
+
         valg = input("\n> ")
         if valg == "1":
             filnavn = input("\nSkriv inn filnavn:\n> ")
             avtaler = leser_file(filnavn)
             utskrift(avtaler)
-        if valg == "2":
+        elif valg == "2":
             lagre_avtaler(avtaler)
             print("\nFilene har blitt lagret.\n")
-        if valg == "3":
+        elif valg == "3":
             print("")
             avtaler.append(ny_avtale())
             print("Avtalen er lagret.")
-        if valg == "4":
+        elif valg == "4":
             utskrift(avtaler)
-        if valg == "5":
+        elif valg == "5":
             utskrift(avtaler)
-            avtale_index = int(input("\nVelg hvilken avtale du vil slette:\n> "))
+            avtale_index = int(
+                input("\nVelg hvilken avtale du vil slette:\n> "))
             avtaler.pop(avtale_index)
-        if valg == "6":
+        elif valg == "6":
             utskrift(avtaler)
-            avtale_index = int(input("\nVelg hvilken avtale du vil redigere:\n> "))
+            avtale_index = int(
+                input("\nVelg hvilken avtale du vil redigere:\n> "))
             avtaler[avtale_index] = Rediger_avtale(avtaler[avtale_index])
-        if valg == "7":
-            break     
+        elif valg == "7":
+            legg_til_kategori()
+        elif valg == "8":
+            legg_til_sted()
+        elif valg == "9":
+            kategori = legg_kategori_til_avtale()
+            if kategori:
+                print("Avtaler:")
+                utskrift(avtaler)
+                avtale_index = input("Velg hvilken avtale kategorien skal legges til: ")
+                avtale = avtaler[int(avtale_index)]
+                avtale.legg_til_kategori(kategori)
+                print("Lagt til avtalen:", avtale.kategorier)
+        elif valg == "10":
+            if STEDER:
+                print("Steder:", STEDER)
+                index = input("Velg indeks på sted for å finne alle avtaler der: ")
+                if index in STEDER:
+                    sted = STEDER.get(index)
+                    avtaler_på_stedet = [avtale for avtale in avtaler if avtale.sted == sted ]
+                    print("Alle avtaler på stedet:", avtaler_på_stedet if avtaler_på_stedet else "Ingen avtaler")
+                else:
+                    print("Fant ikke stedet..")
+            else:
+                print("Systemet har ikke lagret steder enda.. lag dem først")
+        else:
+            break
 
-#Oppgave n
+# Oppgave n
+
 
 def Rediger_avtale(avtale: Avtale):
     print(avtale)
     egenskap = input("Velg hvilke egenskap du vil endre: ")
     if egenskap == "1":
         avtale.tittel = input("Skriv inn en ny tittel: ")
-        
+
     if egenskap == "2":
         avtale.sted = input("Skriv inn et nytt sted: ")
-        
+
     if egenskap == "3":
-        starttidspunkt = input("Skriv inn starttidspunktet med formatet [ÅÅÅÅ-MM-DD TT:MM:SS]: ")
+        starttidspunkt = input(
+            "Skriv inn starttidspunktet med formatet [ÅÅÅÅ-MM-DD TT:MM:SS]: ")
         if starttidspunkt:
             starttidspunkt = datetime.fromisoformat(starttidspunkt)
         else:
             starttidspunkt = datetime.now()
         avtale.starttidspunkt = starttidspunkt
-        
+
     if egenskap == "4":
         while True:
             try:
@@ -158,7 +263,7 @@ def Rediger_avtale(avtale: Avtale):
             except ValueError:
                 print("Varighet må være et tall!")
         avtale.varighet = varighet
-    
+
     return avtale
 
 
